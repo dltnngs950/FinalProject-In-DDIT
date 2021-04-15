@@ -22,7 +22,7 @@ Groupware 개발을 목표로 프로젝트를 진행하였다.
 
 4. groupware에 로그인하여 출근이 된 것을 확인
 
-<img src="https://user-images.githubusercontent.com/70561355/114825419-29e59600-9e01-11eb-9dfa-159fd22f0d43.PNG" width="50%" height="800px"/> 
+<img src="https://user-images.githubusercontent.com/70561355/114825419-29e59600-9e01-11eb-9dfa-159fd22f0d43.PNG" width="100%" height="600px"/> 
 
 
 5. QR코드 재사용시 
@@ -32,7 +32,7 @@ Groupware 개발을 목표로 프로젝트를 진행하였다.
 
 6. groupware에 로그인하여 퇴근이 된 것을 확인
 
-<img src="https://user-images.githubusercontent.com/70561355/114826307-4b934d00-9e02-11eb-9500-f5af671fb014.PNG" width="50%" height="800px"/> 
+<img src="https://user-images.githubusercontent.com/70561355/114826307-4b934d00-9e02-11eb-9500-f5af671fb014.PNG" width="100%" height="600px"/> 
 
 
 
