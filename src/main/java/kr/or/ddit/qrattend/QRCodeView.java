@@ -20,7 +20,7 @@ public class QRCodeView extends AbstractView{
 	        
 	        setContentType("image/png; charset=UTF-8");
 	    }
- 
+  
 	   @Override
 	   protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest req,
 	         HttpServletResponse resp) throws Exception {

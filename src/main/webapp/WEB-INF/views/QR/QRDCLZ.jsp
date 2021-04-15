@@ -71,7 +71,7 @@
 <body class="animated fadeIn">
     <section id="login-container">
 	
-        <div class="row"> 
+        <div class="row">  
             <div class="col-md-4" id="login-wrapper">
                 <div class="panel panel-primary animated flipInY">
                     <div class="panel-heading" style="text-align:center;">
