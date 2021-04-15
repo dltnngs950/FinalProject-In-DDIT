@@ -51,7 +51,7 @@
     
 </head>
 
-<body class="animated fadeIn">
+<body class="animated fadeIn"> 
     <section id="login-container">
 	
         <div class="row">

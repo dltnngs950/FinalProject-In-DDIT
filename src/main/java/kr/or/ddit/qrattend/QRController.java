@@ -23,7 +23,7 @@ import kr.or.ddit.util.AriaUtil;
 @RequestMapping("QR")
 @Controller
 public class QRController {
-	
+	 
 	private static final Logger logger = LoggerFactory.getLogger(OnoffController.class);
 	// 암호화 복호화를 위한 aria 유틸
 	private AriaUtil aria;
