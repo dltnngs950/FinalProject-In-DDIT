@@ -1,0 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+
+<script>
+	$(function(){
+		$("#registProject").on("click",function(){
+			$("#app_det_no").val("4");
+			$("#app_div_no").val("3");
+			$("#pmsfrm").submit();
+			
+		})
+	})
+</script>
+
+<form action="${cp}/app/registApp" id="pmsfrm" method="get">
+	<input type="hidden" name="emp_no" value="${S_USER.emp_no}">
+	<input type="hidden" id="app_div_no" name="app_div_no">
+	<input type="hidden" id="app_det_no" name="app_det_no">
+</form>
+
+<input type="button" id="registProject" value="프로젝트 기안작성">

@@ -1,0 +1,227 @@
+package kr.or.ddit.groupware.repository;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.common.model.PageVo;
+import kr.or.ddit.groupware.model.BoardCommVo;
+import kr.or.ddit.groupware.model.BoardPostFileVo;
+import kr.or.ddit.groupware.model.BoardPostVo;
+import kr.or.ddit.groupware.model.BoardVo;
+
+@Repository("boardDao")
+public class BoardDao implements BoardDaoI{
+
+	@Resource(name = "sqlSessionTemplate")
+	private SqlSessionTemplate template;
+
+	@Override
+	public List<BoardVo> selectBoard() {
+		return template.selectList("board.selectBoard");
+	}
+
+	@Override
+	public int insertBoard(BoardVo vo) {
+		return template.insert("board.insertBoard", vo);
+	}
+
+	@Override
+	public int updateBoard(BoardVo vo) {
+		return template.update("board.updateBoard", vo);
+	}
+
+	@Override
+	public int insertPost(BoardPostVo vo) {
+		return template.insert("board.insertPost", vo);
+	}
+
+	@Override
+	public int hitsupdate(int post_seq) {
+		return template.update("board.hitsupdate", post_seq);
+	}
+
+	@Override
+	public int insertFile(BoardPostFileVo vo) {
+		return template.insert("board.insertFile", vo);
+	}
+
+	@Override
+	public List<BoardPostFileVo> selectFile(BoardPostFileVo vo) {
+		return template.selectList("board.selectFile", vo);
+	}
+
+	@Override
+	public int deleteFile(BoardPostFileVo vo) {
+		return template.delete("board.deleteFile", vo);
+	}
+
+	@Override
+	public BoardPostFileVo selectFileDownload(int file_no) {
+		return template.selectOne("board.selectFileDownload", file_no);
+	}
+
+	@Override
+	public BoardPostVo postDetail(BoardPostVo vo) {
+		return template.selectOne("board.postDetail", vo);
+	}
+
+	@Override
+	public int maxPostNo() {
+		return template.selectOne("board.maxPostNo");
+	}
+
+	@Override
+	public List<BoardPostVo> postListView(PageVo vo) {
+		return template.selectList("board.postListView", vo);
+	}
+
+	@Override
+	public int selectPostCnt(PageVo vo) {
+		return template.selectOne("board.selectPostCnt", vo);
+	}
+
+	@Override
+	public int modifyPost(BoardPostVo vo) {
+		return template.update("board.modifyPost", vo);
+	}
+
+	@Override
+	public BoardPostVo selectPost(BoardPostVo vo) {
+		return template.selectOne("board.selectPost", vo);
+	}
+
+	@Override
+	public int deletePost(BoardPostVo vo) {
+		return template.update("board.deletePost", vo);
+	}
+
+	@Override
+	public int insertComm(BoardCommVo vo) {
+		return template.insert("board.insertComm", vo);
+	}
+
+	@Override
+	public List<BoardCommVo> selectComm(BoardCommVo vo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	@Override
+//	public List<BoardInfoVo> selectBoardInfo() {
+//	
+//		return template.selectList("board.selectBoardInfo");
+//	}
+//
+//	@Override
+//	public int insertBoardInfo(BoardInfoVo vo) {
+//			
+//		return template.insert("board.insertBoardInfo", vo);
+//	}
+//
+//	@Override
+//	public int modifyBoardInfo(BoardInfoVo vo) {
+//			
+//		return template.update("board.modifyBoardInfo", vo);
+//	}
+//
+//	@Override
+//	public List<BoardListVo> boardListAll(PageVo vo) {
+//		
+//		return  template.selectList("board.boardListAll", vo);
+//	}
+//
+//	@Override
+//	public int boardCnt(PageVo vo) {
+//		
+//		return  template.selectOne("board.boardCnt", vo);
+//	}
+//
+//	@Override
+//	public int insertBoard(BoardListVo vo) {
+//	
+//		return  template.insert("board.insertBoard", vo);
+//	}
+//
+//	@Override
+//	public BoardListVo selectBoard(BoardListVo vo) {
+//		
+//		return  template.selectOne("board.selectBoard", vo);
+//	}
+//
+//	@Override
+//	public int maxPostNo() {
+//		
+//		return  template.selectOne("board.maxPostNo");
+//	}
+//
+//	@Override
+//	public int insertComm(BoardListVo vo) {
+//		
+//		return  template.insert("board.insertComm", vo);
+//	}
+//
+//	@Override
+//	public int modifyBoard(BoardListVo vo) {
+//		
+//		return  template.update("board.modifyBoard", vo);
+//	}
+//
+//	@Override
+//	public int deleteBoard(BoardListVo vo) {
+//			
+//			return  template.update("board.deleteBoard", vo);
+//		}
+//
+//	@Override
+//	public int insertReply(PostCommVo vo) {
+//		
+//		return  template.insert("board.insertReply", vo);
+//	}
+//
+//	@Override
+//	public List<PostCommVo> selectReply(PostCommVo vo) {
+//		return  template.selectList("board.selectReply", vo);
+//	}
+//
+//	@Override
+//	public int deleteReply(PostCommVo vo) {
+//		return  template.update("board.deleteReply", vo);
+//	}
+//
+//	@Override
+//	public int insertFile(FileVo vo) {
+//		return template.insert("board.insertFile", vo);
+//	}
+//
+//	@Override
+//	public List<FileVo> selectFile(FileVo vo) {
+//		return template.selectList("board.selectFile", vo);
+//	}
+//
+//	@Override
+//	public int deleteFile(FileVo vo) {
+//		return template.delete("board.deleteFile", vo);
+//	}
+//
+//	@Override
+//	public FileVo selectFileDownload(int attno) {
+//		return template.selectOne("board.selectFileDownload", attno);
+//	}
+//	
+
+}

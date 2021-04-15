@@ -1,0 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html>
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<script>
+$(function() {
+	
+
+//수정
+
+$("#modifyBtn").on("click", function() {
+	$("#frm").attr("method","get");
+	$("#frm").attr("action","${cp}/board/modifyPost");
+	$("#frm").submit();
+})
+
+//삭제
+
+$("#deleteBtn").on("click", function() {
+	$("#frm").attr("method","post");
+	$("#frm").attr("action","${cp}/board/deletePost");
+	$("#frm").submit();
+})
+
+// 답글
+
+$("#replyBtn").on("click", function() {
+	$("#frm").attr("method","post");
+	$("#frm").attr("action","${cp}/board/replyPost");
+	$("#frm").submit();
+})
+
+
+})
+</script>
+
+
+<body>
+	<form id="frm" >
+		<input type="hidden" name="emp_no" value="${S_USER.emp_no}">
+		<input type="hidden" name="post_no" value="${boardPost.post_no}">
+	</form>
+
+	<h3>제목</h3>${boardPost.title}
+	<h3>작성자</h3>${boardPost.ko_nm}
+	<h3>작성일</h3><fmt:formatDate value="${boardPost.reg_dt}" pattern="yyyy-MM-dd"/>
+	<h3>내용</h3>${boardPost.cont}
+	
+	 <c:choose>
+		<c:when test="${S_USER.emp_no==boardPost.emp_no}">
+			<input type="button" id="modifyBtn" value="수정">
+			<input type="button" id="deleteBtn" value="삭제">
+		</c:when>
+		<c:when test="${S_USER.emp_no==0}">
+			<input type="button" id="deleteBtn" value="삭제">
+		</c:when>
+	</c:choose>  
+
+			<input type="button" id="commBtn" value="답글">
+	
+	<h3>댓글</h3>
+		<c:forEach items="${commList}" var="comm">
+			<c:choose>
+				<c:when test="${comm.del_cd==1}">
+				</c:when>
+				<c:otherwise>
+					${comm. }
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+	
+	
+		<form action="${cp}/board/insertComm" method="post">
+			<textarea rows="3" cols="50" id="comm" name="commCont"></textarea>
+			<input type="hidden" name="post_no" value="${vo.post_no}">
+			<input type="hidden" name="emp_no" value="${S_USER.emp_no}">
+			<input type="submit" id="commBtn" value="댓글저장">
+		</form>
+ 	
+</body>
+</html>

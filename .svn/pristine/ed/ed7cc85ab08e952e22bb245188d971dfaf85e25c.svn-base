@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="board">
+	<!-- bor_act(디비의 컬럼명)=#{bor_act} (vo클래스의 변수이름) -->
+
+	<!-- select된 컬럼과 resultType에 기술된 클래스의 
+		필드 이름이 동일하면	자동으로 값을 넣어준다. 
+		resultType : 한 행의 정보를 저장할 수 있는 클래스 타입을 명시-->
+	
+	<!-- 관리자 게시판 관리  -->	
+	<select id="selectBoard" resultType="boardVo">
+		select * from board order by bor_no
+	</select>
+	
+	<insert id="insertBoard" parameterType="boardVo">
+		insert into board values (board_seq.nextVal,#{bor_nm},#{emp_no},#{act_cd})
+	</insert>
+	
+    <update id="updateBoard" parameterType="boardVo">
+		update board set act_cd=#{act_cd} where bor_nm=#{bor_nm}
+	</update>
+	
+	<insert id="insertPost" parameterType="boardPostVo">
+		insert into post values(post_seq.nextVal,#{title},#{cont},sysdate,0,#{emp_no},#{bor_no},#{del_cd},null)
+	</insert>
+	
+	<select id="postDetail" resultType="boardPostVo" parameterType="boardPostVo">
+		 select title, reg_dt, ko_nm, cont
+   		 from post p, emp e 
+   		 where p.emp_no=e.emp_no 
+   		 and post_no=#{post_no}
+	</select>
+	
+	<select id="maxPostNo" resultType="int">
+		select Max(post_no) from post 
+	</select>
+	
+	<select id="selectPost" parameterType="boardPostVo" resultType="boardPostVo">
+		select * from post where post_no=#{post_no}
+	</select>
+	
+	<update id="modifyPost" parameterType="boardPostVo">
+		update post set title=#{title},cont=#{cont},reg_dt=sysdate where post_no=#{post_no}
+	</update>
+	
+	<!-- 조회수 증가 -->
+	<update id="hitsupdate" parameterType="int">
+		update post set hits = hits+1 where post_seq=#{post_seq}
+	</update>
+	
+	<insert id="insertAttFile">
+		insert into att_file value(file_seq.nextVal,#{file_nm},#{file_route},sysdate,#{del_cd},#{file_size})
+	</insert>
+	
+	<insert id="insertPostFile" parameterType="boardPostFileVo">
+		insert into post_file values(file_seq.nextVal,#{post_no})
+	</insert>
+	
+	<select id="selectFile" resultType="boardPostFileVo" parameterType="boardPostFileVo" >
+		select * from post_file where post_no=#{post_no} 
+	</select>
+	
+	<select id="selectFileDownload" resultType="boardPostFileVo" parameterType="int">
+		select * from post_file where file_no=#{file_no}
+	</select>
+	
+	<delete id="deleteFile" parameterType="boardPostFileVo">
+		delete post_file where file_no=#{file_no}
+	</delete>
+	
+	<select id="postListView" resultType="boardPostVo" parameterType="pageVo">
+		SELECT *
+		FROM
+		    (SELECT ROWNUM rn, a.*
+		     FROM (SELECT post_no, title, ko_nm, reg_dt, hits, del_cd 
+		    		 FROM post p, emp e
+                     WHERE e.emp_no = p.emp_no 
+		     		 AND bor_no=#{bor_no}
+		     		 ORDER BY post_no desc) a
+		     WHERE ROWNUM &lt;= #{page} * #{pageSize})
+		WHERE rn BETWEEN (#{page}-1) * #{pageSize} + 1 AND #{page} * #{pageSize}	
+	</select> 
+	
+	<select id="selectPostCnt" resultType="int" parameterType="pageVo">
+		SELECT COUNT(*) cnt FROM post WHERE bor_no=#{bor_no}
+	</select>
+	
+	<update id="deletePost" parameterType="boardPostVo">
+		update post set del_cd=1 where post_no=#{post_no}
+	</update>
+	
+	<!-- 댓글 등록 -->
+	<insert id="insertComm" parameterType="boardCommVo">
+		insert into values(post_comm_seq.nextVal,sysdate,#{cont},0,#{post_no},#{emp_no})
+	</insert>
+	
+	<select id="selectComm" parameterType="boardCommVo" resultType="boardCommVo">
+		select * from comm where post_no=#{post_no} order by com_no
+	</select>
+	
+	<update id="deleteComm" parameterType="boardCommVo">
+		update comm set del_cd=1 where com_no=#{com_no}
+	</update>
+	
+	
+
+
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--<select id="boardListAll" parameterType="pageVo" resultType="boardListVo">
+		SELECT LPAD((' '), 8*(LEVEL-1)) || TITLE title, bor_no, post_no, USER_ID, REG_DT,POST_DEL, LEVEL boardLevel
+		FROM
+			(SELECT ROWNUM rn, a.*
+			 FROM
+			     (SELECT *
+			      FROM BOARD_POST
+			      WHERE bor_no = #{boardNo}
+			      ORDER BY post_no DESC
+			      ) a
+			 )
+		WHERE rn BETWEEN (#{page}-1) * #{pageSize} +1 AND #{page} * #{pageSize}
+		START WITH POST_C_NO IS NULL 
+		CONNECT BY PRIOR POST_NO = POST_C_NO
+		ORDER SIBLINGS BY reg_dt DESC
+	</select>
+	
+	<select id="boardCnt" parameterType="pageVo" resultType="int">
+		select COUNT(*) from BOARD_POST
+		WHERE BOR_NO=#{boardNo}
+	</select>	
+	
+	<insert id="insertBoard" parameterType="boardListVo">
+		insert into board_post values(#{bor_no},sboard_seq.nextVal,#{user_id},#{title},
+										#{cont},sysdate,1,'','','')
+	</insert>
+	
+	<select id="selectBoard" parameterType="boardListVo" resultType="boardListVo">
+		select * from BOARD_POST WHERE bor_no = #{bor_no} AND post_no = #{post_no} and user_id = #{user_id}
+	</select>
+	
+	<select id="maxPostNo" resultType="int">
+		select Max(post_no) 
+		from Board_Post 
+	</select>
+	
+	<insert id="insertComm" parameterType="boardListVo">
+	 	insert into board_post values(#{bor_no},sboard_seq.nextVal,#{user_id},#{title},
+									#{cont},sysdate,1,#{bor_c_nm},#{post_c_no},#{rep_user_id})
+	</insert>
+	
+	<update id="modifyBoard" parameterType="boardListVo">
+		update board_post set reg_dt=sysdate,title=#{title},cont=#{cont}
+		where post_no=#{post_no} AND bor_no = #{bor_no} AND user_id =#{user_id} 
+	</update>
+
+	<update id="deleteBoard" parameterType="boardListVo">
+		UPDATE board_post SET POST_DEL=0 WHERE post_no=#{post_no}
+		 AND bor_no = #{bor_no} AND user_id =#{user_id} 
+	</update>
+	
+	<insert id="insertReply" parameterType="postCommVo">
+		insert into post_com values(post_com_seq.nextVal,#{com_user_id},sysdate,#{com_con},
+									1,#{bor_no},#{post_no},#{user_id})
+	</insert>
+	
+	<select id="selectReply" resultType="postCommVo" parameterType="postCommVo">
+		select * from post_com where bor_no=#{bor_no} and post_no=#{post_no} and user_id=#{user_id}
+		order by com_no
+	</select>
+	
+	<update id="deleteReply" parameterType="postCommVo">
+		update post_com set com_DEL=0  where com_no=#{com_no}
+		 AND com_user_id = #{com_user_id}
+	</update>
+
+	<insert id="insertFile" parameterType="fileVo">
+		insert into ATTACH values(file_seq.nextVal,#{bor_no},#{post_no},#{user_id},#{file_nm},#{read_file_name})
+	</insert>
+	
+	<select id="selectFile" resultType="fileVo" parameterType="fileVo" >
+		select * from ATTACH where bor_no=#{bor_no} AND post_no=#{post_no} AND 
+		user_id=#{user_id}
+	</select>
+	
+	<select id="selectFileDownload" resultType="fileVo" parameterType="int">
+		select * from attach where att_no=#{att_no}
+	</select>
+	
+	
+	<delete id="deleteFile" parameterType="fileVo">
+		delete ATTACH where att_no=#{att_no}
+	</delete> -->
+</mapper>
+

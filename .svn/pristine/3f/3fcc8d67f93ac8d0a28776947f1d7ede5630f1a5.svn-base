@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pms">
+
+	<select id="selectAll"  resultType="pmsVo">
+		SELECT *
+		FROM pms
+	</select>
+	<!-- pms 등록 -->
+	<insert id="registPsm" parameterType="pmsVo">
+		INSERT INTO PMS VALUES(
+		pms_seq.nextVal
+		,#{app_char}
+		,#{emp_no}
+		,#{app_emp_no}
+		,#{pms_nm}
+		,#{cont}
+		,#{s_dt}
+		,#{e_dt}
+		,''
+		,0
+		,#{sta_cd})
+	</insert>
+	<!-- 가장최근 PSM 프로젝트 찾기 -->
+	<select id="selectPmsMaxNo" resultType="int">
+		SELECT MAX(pms_no)
+		FROM pms
+	</select>
+	<!-- pms 참여자 등록 -->
+	<insert id="registPsmEmp" parameterType="pmsEmpVo">
+		INSERT INTO pms_emp VALUES(#{pms_no},#{attend_emp_no})
+	</insert>
+	<!-- PMS 참여자 리스트 불러오기 -->
+	<select id="selectPsmEmpList" resultType="int" parameterType="int">
+		SELECT attend_emp_no
+		FROM pms_emp
+		WHERE pms_no = #{pms_no}
+	</select>
+	<!-- PMS등록번호 불러오기 -->
+	<select id="selectPmsNo" resultType="int" parameterType="String">
+		SELECT pms_no
+		FROM pms
+		WHERE app_char = #{app_char}
+	</select>
+	<!-- PSM 승인처리 -->
+	<update id="approvePms" parameterType="String">
+		UPDATE pms SET sta_cd = 504 WHERE app_char = #{app_char}
+	</update>
+	
+</mapper>

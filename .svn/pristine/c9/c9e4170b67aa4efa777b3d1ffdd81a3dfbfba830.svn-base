@@ -1,0 +1,38 @@
+package kr.or.ddit.groupware.service;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.common.model.PageVo;
+import kr.or.ddit.groupware.model.MsgFileVo;
+import kr.or.ddit.groupware.model.MsgVo;
+
+public interface MsgServiceI {
+	
+	//쪽지전송
+	int sentMsg(MsgVo msgVo);
+	
+	//등록한 쪽지 호출
+	int maxMsgNo();
+	
+	//첨부파일 등록
+	int registMsgFile(MsgFileVo msgFileVo);
+	
+	//첨부파일 확인
+	List<Integer> msgFileList(int file_no);
+	
+	//받은쪽지 내용 및 개수
+	Map<String, Object> recMsgList(PageVo pageVo);
+	
+	//받은 쪽지 개수
+	int recMsgCnt(PageVo pageVo);
+	
+	//보낸쪽지 확인
+	Map<String, Object> sentMsgList(PageVo pageVo);
+	
+	//보낸쪽지 개수
+	int sentMsgCnt(PageVo pageVo);
+	
+	//안읽은 쪽지 개수
+	int noReadMsgCnt(int emp_no);
+}

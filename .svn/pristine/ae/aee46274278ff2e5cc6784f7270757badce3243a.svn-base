@@ -1,0 +1,157 @@
+package kr.or.ddit.groupware.service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.common.model.PageVo;
+import kr.or.ddit.groupware.model.BoardCommVo;
+import kr.or.ddit.groupware.model.BoardPostFileVo;
+import kr.or.ddit.groupware.model.BoardPostVo;
+import kr.or.ddit.groupware.model.BoardVo;
+import kr.or.ddit.groupware.repository.BoardDao;
+
+
+@Service("boardService")
+public class BoardService implements BoardServiceI{
+
+	@Resource(name = "boardDao")
+	private BoardDao boardDao;
+	
+	// 관리자 게시판 관리
+	@Override
+	public List<BoardVo> selectBoard() {
+		
+		return boardDao.selectBoard();
+	}
+	// 관리자 게시판 등록
+	@Override
+	public int insertBoard(BoardVo vo) {
+		return boardDao.insertBoard(vo);
+	}
+	// 관리자 게시판 수정
+	@Override
+	public int updateBoard(BoardVo vo) {
+		return boardDao.updateBoard(vo);
+	}
+    //게시글 등록
+	@Override
+	public int insertPost(BoardPostVo vo) {
+		return boardDao.insertPost(vo);
+	}
+	//게시글 상세보기
+	@Override
+	public BoardPostVo postDetail(BoardPostVo vo) {
+		return boardDao.postDetail(vo);
+	}
+	// 조회수
+	@Override
+	public int hitsupdate(int post_seq) {
+		return boardDao.hitsupdate(post_seq);
+	}
+	//파일 업로드
+	@Override
+	public int insertFile(BoardPostFileVo vo) {
+		return boardDao.insertFile(vo);
+	}
+	//파일 리스트
+	@Override
+	public List<BoardPostFileVo> selectFile(BoardPostFileVo vo) {
+		return boardDao.selectFile(vo);
+	}
+	//파일 삭제
+	@Override
+	public int deleteFile(BoardPostFileVo vo) {
+		return boardDao.deleteFile(vo);
+	}
+	//파일 다운로드
+	@Override
+	public BoardPostFileVo selectFileDownload(int file_no) {
+		return boardDao.selectFileDownload(file_no);
+	}
+	@Override
+	public int maxPostNo() {
+		return boardDao.maxPostNo();
+	}
+	//게시글 리스트
+	@Override
+	public Map<String, Object> postListView(PageVo vo) {
+		
+		Map<String, Object> map = new HashMap<>();
+		List<BoardPostVo> postList = boardDao.postListView(vo);
+		int postCnt = boardDao.selectPostCnt(vo);
+		
+		map.put("postList", postList);
+		map.put("postCnt", postCnt);
+		
+		return map;
+	}
+	//게시글 수정
+	@Override
+	public int modifyPost(BoardPostVo vo) {
+		return boardDao.modifyPost(vo);
+	}
+	@Override
+	public BoardPostVo selectPost(BoardPostVo vo) {
+		return boardDao.selectPost(vo);
+	}
+	@Override
+	public int deletePost(BoardPostVo vo) {
+		return boardDao.deletePost(vo); 
+	}
+	@Override
+	public int insertComm(BoardCommVo vo) {
+		return boardDao.insertComm(vo);
+	}
+ 
+	
+	/*
+
+	
+
+	 * 
+	 * @Override public int insertComm(BoardListVo vo) {
+	 * 
+	 * return boardDao.insertComm(vo); }
+	 * 
+	 * @Override public int modifyBoard(BoardListVo vo) {
+	 * 
+	 * return boardDao.modifyBoard(vo); }
+	 * 
+	 * @Override public int deleteBoard(BoardListVo vo) {
+	 * 
+	 * return boardDao.deleteBoard(vo); }
+	 * 
+	 * @Override public int insertReply(PostCommVo vo) { return
+	 * boardDao.insertReply(vo); }
+	 * 
+	 * @Override public List<PostCommVo> selectReply(PostCommVo vo) { return
+	 * boardDao.selectReply(vo); }
+	 * 
+	 * @Override public int deleteReply(PostCommVo vo) { return
+	 * boardDao.deleteReply(vo); }
+	 * 
+	 * @Override public int insertFile(FileVo vo) { return boardDao.insertFile(vo);
+	 * }
+	 * 
+	 * @Override public List<FileVo> selectFile(FileVo vo) { return
+	 * boardDao.selectFile(vo); }
+	 * 
+	 * @Override public int deleteFile(FileVo vo) { return boardDao.deleteFile(vo);
+	 * }
+	 * 
+	 * @Override public FileVo selectFileDownload(int attno) { return
+	 * boardDao.selectFileDownload(attno); }
+	 * 
+	 * @Override public List<BoardVo> selectBoard() { // TODO Auto-generated method
+	 * stub return null; }
+	 */
+
+
+
+
+}

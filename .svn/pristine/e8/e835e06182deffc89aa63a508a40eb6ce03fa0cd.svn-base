@@ -1,0 +1,60 @@
+package kr.or.ddit.groupware.repository;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.groupware.model.PmsEmpVo;
+import kr.or.ddit.groupware.model.PmsVo;
+@Repository("pmsDao")
+public class PmsDao implements PmsDaoi{
+
+	@Resource(name = "sqlSessionTemplate")
+	private SqlSessionTemplate template;
+	
+	/** pms 전체조회 */
+	@Override
+	public List<PmsVo> selectAll() {
+		return template.selectList("pms.selectAll");
+	}
+
+	@Override
+	public int registPsm(PmsVo pmsVo) {
+		// TODO Auto-generated method stub
+		return template.insert("pms.registPsm",pmsVo);
+	}
+
+	@Override
+	public int selectPmsMaxNo() {
+		// TODO Auto-generated method stub
+		return template.selectOne("pms.selectPmsMaxNo");
+	}
+
+	@Override
+	public int registPsmEmp(PmsEmpVo pmsEmpVo) {
+		// TODO Auto-generated method stub
+		return template.insert("pms.registPsmEmp",pmsEmpVo);
+	}
+
+	@Override
+	public List<Integer> selectPsmEmpList(int pms_no) {
+		// TODO Auto-generated method stub
+		return template.selectList("pms.selectPsmEmpList",pms_no);
+	}
+
+	@Override
+	public int selectPmsNo(String app_char) {
+		// TODO Auto-generated method stub
+		return template.selectOne("pms.selectPmsNo",app_char);
+	}
+
+	@Override
+	public int approvePms(String app_char) {
+		// TODO Auto-generated method stub
+		return template.update("pms.approvePms",app_char);
+	}
+
+}

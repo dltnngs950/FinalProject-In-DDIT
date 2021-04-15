@@ -1,0 +1,62 @@
+package kr.or.ddit.groupware.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.groupware.model.PmsEmpVo;
+import kr.or.ddit.groupware.model.PmsVo;
+import kr.or.ddit.groupware.repository.PmsDao;
+
+@Service("pmsService")
+public class PmsService implements PmsServicei{
+
+	@Resource(name = "pmsDao")
+	private PmsDao pmsDao;
+
+	/* 전체 조회*/
+	@Override
+	public List<PmsVo> selectAll() {
+		
+		return pmsDao.selectAll();
+	}
+
+	@Override
+	public int registPsm(PmsVo pmsVo) {
+		// TODO Auto-generated method stub
+		return pmsDao.registPsm(pmsVo);
+	}
+
+	@Override
+	public int selectPmsMaxNo() {
+		// TODO Auto-generated method stub
+		return pmsDao.selectPmsMaxNo();
+	}
+
+	@Override
+	public int registPsmEmp(PmsEmpVo pmsEmpVo) {
+		// TODO Auto-generated method stub
+		return pmsDao.registPsmEmp(pmsEmpVo);
+	}
+
+	@Override
+	public List<Integer> selectPsmEmpList(int pms_no) {
+		// TODO Auto-generated method stub
+		return pmsDao.selectPsmEmpList(pms_no);
+	}
+
+	@Override
+	public int selectPmsNo(String app_char) {
+		// TODO Auto-generated method stub
+		return pmsDao.selectPmsNo(app_char);
+	}
+
+	@Override
+	public int approvePms(String app_char) {
+		// TODO Auto-generated method stub
+		return pmsDao.approvePms(app_char);
+	}
+	
+}

@@ -1,0 +1,74 @@
+package kr.or.ddit.groupware.repository;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.common.model.PageVo;
+import kr.or.ddit.groupware.model.MsgFileVo;
+import kr.or.ddit.groupware.model.MsgVo;
+
+@Repository("msgDao")
+public class MsgDao implements MsgDaoI{
+	
+	@Resource(name = "sqlSessionTemplate")
+	private SqlSessionTemplate template;
+
+	@Override
+	public int sentMsg(MsgVo msgVo) {
+		// TODO Auto-generated method stub
+		return template.insert("msg.sentMsg",msgVo);
+	}
+
+	@Override
+	public int maxMsgNo() {
+		// TODO Auto-generated method stub
+		return template.selectOne("msg.maxMsgNo");
+	}
+
+	@Override
+	public int registMsgFile(MsgFileVo msgFileVo) {
+		// TODO Auto-generated method stub
+		return template.insert("msg.registMsgFile",msgFileVo);
+	}
+
+	@Override
+	public List<Integer> msgFileList(int file_no) {
+		// TODO Auto-generated method stub
+		return template.selectList("msg.msgFileList",file_no);
+	}
+
+	@Override
+	public List<MsgVo> recMsgList(PageVo pageVo) {
+		// TODO Auto-generated method stub
+		return template.selectList("msg.recMsgList",pageVo);
+	}
+
+	@Override
+	public int recMsgCnt(PageVo pageVo) {
+		// TODO Auto-generated method stub
+		return template.selectOne("msg.recMsgCnt",pageVo);
+	}
+
+	@Override
+	public List<MsgVo> sentMsgList(PageVo pageVo) {
+		// TODO Auto-generated method stub
+		return template.selectList("msg.sentMsgList",pageVo);
+	}
+
+	@Override
+	public int sentMsgCnt(PageVo pageVo) {
+		// TODO Auto-generated method stub
+		return template.selectOne("msg.sentMsgCnt",pageVo);
+	}
+
+	@Override
+	public int noReadMsgCnt(int emp_no) {
+		// TODO Auto-generated method stub
+		return template.selectOne("msg.noReadMsgCnt", emp_no);
+	}
+	
+}

@@ -1,0 +1,109 @@
+package kr.or.ddit.groupware.service;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.common.model.PageVo;
+import kr.or.ddit.groupware.model.BoardCommVo;
+import kr.or.ddit.groupware.model.BoardPostFileVo;
+import kr.or.ddit.groupware.model.BoardPostVo;
+import kr.or.ddit.groupware.model.BoardVo;
+
+
+
+public interface BoardServiceI {
+	
+	
+	List<BoardVo> selectBoard();
+	
+	// 게시판 생성
+	int insertBoard(BoardVo vo);
+	// 게시판 수정
+	int updateBoard(BoardVo vo);
+	// 게시글 등록
+	int insertPost(BoardPostVo vo);
+	// 게시글 번호 
+	int maxPostNo();
+	
+	//게시글 상세보기
+	BoardPostVo postDetail(BoardPostVo vo);
+	
+	//게시글 리스트 보기
+//	List<BoardPostVo> postListView(PageVo vo); 
+	Map<String, Object> postListView(PageVo vo);
+	
+	//게시글 개수
+//	int selectPostCnt(PageVo vo);
+//	Map<String, Object> selectPostCnt(PageVo vo);
+	
+	//게시글 조회
+	BoardPostVo selectPost(BoardPostVo vo);
+	
+	//게시글 수정
+	int modifyPost(BoardPostVo vo);
+	
+	//게시글 삭제
+	int deletePost(BoardPostVo vo);
+	
+	//게시글댓글 작성
+	int insertComm(BoardCommVo vo);
+	
+	// 조회수 증가
+	int hitsupdate(int post_seq);
+	//파일 등록
+	int insertFile(BoardPostFileVo vo);
+	//파일 리스트
+	List<BoardPostFileVo>selectFile(BoardPostFileVo vo);
+	//파일 삭제
+	int deleteFile(BoardPostFileVo vo);
+	//파일 다운로드
+	BoardPostFileVo selectFileDownload(int file_no);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * int insertBoardInfo(BoardInfoVo vo);
+	 * 
+	 * int modifyBoardInfo(BoardInfoVo vo);
+	 * 
+	 * Map<String, Object> boardListAll(PageVo vo);
+	 * 
+	 * int insertBoard(BoardListVo vo);
+	 * 
+	 * BoardListVo selectBoard(BoardListVo vo);
+	 * 
+	 * int maxPostNo();
+	 * 
+	 * int insertComm(BoardListVo vo);
+	 * 
+	 * int modifyBoard(BoardListVo vo);
+	 * 
+	 * int deleteBoard(BoardListVo vo);
+	 * 
+	 * int insertReply(PostCommVo vo);
+	 * 
+	 * List<PostCommVo> selectReply(PostCommVo vo);
+	 * 
+	 * int deleteReply(PostCommVo vo);
+	 * 
+	 * int insertFile(FileVo vo);
+	 * 
+	 * List<FileVo> selectFile(FileVo vo);
+	 * 
+	 * int deleteFile(FileVo vo);
+	 * 
+	 * FileVo selectFileDownload(int attno);
+	 */
+}

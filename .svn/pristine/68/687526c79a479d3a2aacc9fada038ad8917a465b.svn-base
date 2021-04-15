@@ -1,0 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+    
+    <a href="${cp}/empController/empinformation" class="btn btn-primary btn-trans">인사정보</a>
+	<a href="${cp}/empController/organizationChart" class="btn btn-primary btn-trans">조직도</a>
+	<a href="${cp}/empController/emponoff?emp_no=${S_USER.emp_no}&emp_id=${S_USER.emp_id}" class="btn btn-primary btn-trans">근태관리</a>
+    <a href="${cp}/empController/empinformation" class="btn btn-primary btn-trans">인사정보</a> 
+	<a href="${cp}/vacController/goVacjsp" class="btn btn-primary btn-trans">연차관리</a>

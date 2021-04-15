@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="msg">
+ 
+	<!-- 쪽지 전송 -->
+	
+	<insert id="sentMsg" parameterType="msgVo">
+		INSERT INTO msg VALUES(
+		msg_seq.nextVal
+		,#{title }
+		,#{cont }
+		,SYSDATE
+		,''
+		,#{sd_emp_no }
+		,#{rc_emp_no }
+		,#{msg_sta_cd }
+		,'N'
+		,''
+		,''
+		)		
+	</insert>
+	
+	<!-- 등록한 메세지 호출 -->
+	<select id="maxMsgNo" resultType="int">
+		SELECT MAX(msg_no)
+		FROM msg
+	</select>
+	
+	<!-- 첨부파일 등록 -->
+	<insert id="registMsgFile" parameterType="msgFileVo">
+		INSERT INTO msg_file VALUES(#{file_no},#{msg_no})
+	</insert>
+	
+	<!-- 첨부파일 확인 -->
+	<select id="msgFileList" resultType="int" parameterType="int">
+		SELECT file_no
+		FROM msg_file
+		WHERE file_no = #{file_no}
+		ORDER BY file_no
+	</select>
+	
+	<!-- 받은쪽지 확인 -->
+	<select id="recMsgList" parameterType="pageVo" resultType="msgVo">
+		SELECT * 
+		FROM
+		    (SELECT ROWNUM rn, a.*
+		     FROM
+		         (SELECT msg_no, title, cont, reg_dt,sd_emp_no,rc_emp_no,msg_sta_cd rc_sta_cd,m.emp_no emp_no,msg_box_no, emp_id, ko_nm, dept_nm, cd_ko_nm
+                  FROM msg m, emp e, dept d, comm_cd c
+                  WHERE m.sd_emp_no = e.emp_no
+                  AND e.PO_CD = c.comm_no
+                  AND e.dept_no = d.dept_no
+                  AND rc_emp_no = #{emp_no}
+                  ORDER BY msg_no DESC
+		          )a
+             WHERE ROWNUM &lt;= #{page} * #{pageSize}
+		     )
+		WHERE rn BETWEEN (#{page}-1) * #{pageSize} +1 AND #{page} * #{pageSize}
+	</select>
+	
+	<!-- 받은 쪽지 개수 -->
+	<select id="recMsgCnt" resultType="int" parameterType="pageVo">
+		SELECT COUNT(*)
+  		FROM msg
+  		WHERE rc_emp_no = #{emp_no}
+	</select>
+	
+	<!-- 안읽은 쪽지 개수 -->
+	<select id="noReadMsgCnt" resultType="int" parameterType="int">
+		SELECT COUNT(*)
+  		FROM msg
+  		WHERE rc_emp_no = #{emp_no}
+  		AND rc_sta_cd = 'N'
+	</select>
+	
+	<!-- 보낸쪽지 확인 -->
+	<select id="sentMsgList" parameterType="pageVo" resultType="msgVo">
+		SELECT * 
+		FROM
+		    (SELECT ROWNUM rn, a.*
+		     FROM
+		         (SELECT msg_no, title, cont, reg_dt,sd_emp_no,rc_emp_no,msg_sta_cd rc_sta_cd,emp_no,msg_box_no
+                  FROM msg
+                  WHERE sd_emp_no = #{emp_no}
+                  ORDER BY msg_no DESC
+		          )a
+             WHERE ROWNUM &lt;= #{page} * #{pageSize}
+		     )
+		WHERE rn BETWEEN (#{page}-1) * #{pageSize} +1 AND #{page} * #{pageSize}
+	</select>
+	
+	<!-- 보낸 쪽지 개수 -->
+	<select id="sentMsgCnt" resultType="int" parameterType="pageVo">
+		SELECT COUNT(*)
+  		FROM msg
+  		WHERE sd_emp_no = #{emp_no}
+	</select>
+	
+	
+	
+</mapper>
+
+
+

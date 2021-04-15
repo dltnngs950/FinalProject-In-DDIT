@@ -1,0 +1,61 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+ <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<!-- 써머노트 적용 - 주소 불러오기 -->
+<link
+	href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css"
+	rel="stylesheet">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.js"></script>
+<script
+	src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css"
+	rel="stylesheet">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"
+	defer></script>
+
+<!-- 써머노트 스크립트 선언 -->
+
+<script>
+	$(function() {
+		$('#summernote').summernote();
+		
+	})
+</script>
+<body>
+ <h3>게시글 수정</h3>
+ <br><br>
+	<form action="${cp}/board/modifyPost" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="emp_no" value="${S_USER.emp_no}"> 
+		<input type="hidden" name="post_no" value="${boardPost.post_no}">
+	
+		<input type="text" class="form-control" name="title" placeholder="제목을 입력하세요" value="${boardPost.title}"><br>
+		<br>
+		<!-- body 태그  -->
+		<textarea id="summernote" name="cont"> ${boardPost.cont}
+		</textarea>
+			<c:forEach items="${FileList}" var="file">
+			<div>
+				<a href="${cp}/board/addFileDownload?att_no=${file.att_no}">${file.file_nm}</a>
+				<input type="button" class="deleteBtn" value="삭제" data-attno="${file.att_no}"> <br>
+			</div>
+		</c:forEach>
+		첨부파일
+		<div id="addFileDiv" style="float: left;"></div>
+		<input type="button" id="addFileBtn" value="첨부파일 추가"> <br>
+		<input type="submit" value="수정완료" style="float: right;"><br>
+
+	</form>
+
+
+
+</body>
+</html>

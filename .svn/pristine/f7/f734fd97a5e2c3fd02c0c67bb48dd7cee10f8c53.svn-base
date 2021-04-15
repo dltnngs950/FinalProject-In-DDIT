@@ -1,0 +1,323 @@
+package kr.or.ddit.groupware.contoller;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import kr.or.ddit.common.model.PageVo;
+import kr.or.ddit.groupware.model.AttFileVo;
+import kr.or.ddit.groupware.model.BoardCommVo;
+import kr.or.ddit.groupware.model.BoardPostVo;
+import kr.or.ddit.groupware.model.BoardVo;
+import kr.or.ddit.groupware.service.BoardService;
+import kr.or.ddit.groupware.service.EmpService;
+import kr.or.ddit.util.FileUtil;
+
+@RequestMapping("board")
+@Controller
+public class BoardController {
+private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
+
+	@Resource(name = "boardService")
+	private BoardService boardService;
+	
+	@Resource(name="empService")
+	private EmpService empService;
+	
+	
+	@RequestMapping(path = "boardmain", method = RequestMethod.GET)
+	public String main(Model model) {
+		
+		List<BoardVo> board = boardService.selectBoard();
+		
+		model.addAttribute("boardList", board);
+		
+		return "tiles.board.boardMain";
+	}
+	
+	@RequestMapping(path = "mainEmployee", method = RequestMethod.GET)
+	public String mainEmployee(Model model) {
+		
+		List<BoardVo> board = boardService.selectBoard();
+		
+		model.addAttribute("boardList", board);
+		
+		return "tiles.board.mainEmployee";
+	}
+	
+	
+	
+
+	@RequestMapping(path = "boardCreate", method = {RequestMethod.GET, RequestMethod.POST})
+	public String boardCreate(int emp_no, String bor_nm, String active) {
+		
+		int ad = 2;
+		
+		if(active.equals("activation")) {
+			ad = 1;
+		}
+				
+		BoardVo board = new BoardVo();
+		
+		board.setAct_cd(ad);
+		board.setBor_nm(bor_nm);
+		board.setEmp_no(emp_no);
+		logger.debug("board:{}",board);
+		
+		boardService.insertBoard(board);
+		
+		return "redirect:/board/boardmain";
+	
+	}
+	
+	
+	  @RequestMapping(path = "boardModify", method = {RequestMethod.GET, RequestMethod.POST})
+	  public String boardModify(String bor_nm, String active){
+	  
+	  int ad = 2;
+	  
+	  if(active.equals("activation")) { 
+		  ad = 1; 
+	 }
+	  
+	  BoardVo board = new BoardVo();
+	  
+	  board.setBor_nm(bor_nm); 
+	  board.setAct_cd(ad);
+	  
+	  boardService.updateBoard(board);
+	  
+	  return "redirect:/board/boardmain";
+	  
+	  }
+	  
+	  @RequestMapping(path="insertPost", method = RequestMethod.GET) 
+	  public String insertBoard(Model model) {
+		  logger.debug("get:{}", "get");
+		  model.addAttribute("boardList", boardService.selectBoard());
+		  return "tiles.board.insertPost"; 
+	 
+	  }
+	  @RequestMapping(path="boardView", method = RequestMethod.GET) 
+	  public String boardView() {
+		  
+		  return "tiles.board.boardView"; 
+		  
+	  }
+
+	@RequestMapping(path = "insertPost", method =  RequestMethod.POST)
+	public synchronized String insertPost(int bor_no, int emp_no, String title, String cont, MultipartHttpServletRequest file) {
+		logger.debug("post{}", "post");
+		
+		BoardPostVo post = new BoardPostVo();
+		
+		
+		post.setBor_no(bor_no);
+		post.setEmp_no(emp_no);
+		post.setTitle(title);
+		post.setCont(cont);
+		
+		logger.debug("postVo:{}", post);
+		
+		
+		int insertPost = boardService.insertPost(post);
+		logger.debug("post:{}", post);		
+//		if(insertPost == 1) {
+//			
+//			List<MultipartFile> files = file.getFiles("addFile");
+//			
+//			AttFileVo attFileVo = new AttFileVo();
+//			attFileVo.setFile_no(file_no);
+//			
+//			BoardPostFileVo vo = new BoardPostFileVo();
+//			vo.setPost_no(post_no);
+//			
+//			for(MultipartFile multFile:files) {
+//				if(!multFile.getOriginalFilename().equals("")) {
+//					try {
+//						String fileExtension = FileUtil.getFileExtension(multFile.getOriginalFilename());
+//						String fileRoute = "D:/upload/"+ UUID.randomUUID().toString()+fileExtension;
+//						String fileName = multFile.getOriginalFilename();
+//						multFile.transferTo(new File(fileRoute));
+//						attFileVo.setFile_nm(fileName);
+//						attFileVo.setFile_route(fileRoute);
+//						vo.setFile_no(file_no);
+//						boardService.insertFile(vo);
+//						
+//					} catch (IllegalStateException | IOException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			} 
+		if(insertPost==1) {
+			int post_no = boardService.maxPostNo();
+			logger.debug("insertPost{}", insertPost);	
+			return "redirect:/board/postDetail?post_no="+post_no;
+		}else {
+			return "board/insertPost";
+		
+		}
+	}
+	
+	@RequestMapping(path = "postDetail", method = RequestMethod.GET)
+	public String postDetail(int post_no, Model model) {
+		
+		BoardPostVo boardPost = new BoardPostVo();
+		
+		boardPost.setPost_no(post_no);
+		
+		BoardPostVo boardPostVo = boardService.postDetail(boardPost);
+		List<BoardVo> boardVo = boardService.selectBoard();
+		
+		
+		model.addAttribute("boardPost", boardPostVo);
+		model.addAttribute("boardVo", boardVo);
+		
+		BoardCommVo vo = new BoardCommVo();
+		
+		vo.setPost_no(post_no);
+		
+		
+		
+		return "tiles.board.postDetail";
+	}
+	
+	@RequestMapping(path = "postListView", method = RequestMethod.GET)
+	public String postListView(PageVo pageVo, int bor_no, Model model) {
+		
+		Map<String, Object> map = boardService.postListView(pageVo);
+	
+		List<BoardPostVo> postList = (List<BoardPostVo>)map.get("postList");
+		
+		int postCnt = (int)map.get("postCnt");
+		int pagination = (int)Math.ceil((double) postCnt / pageVo.getPageSize());
+		
+		model.addAttribute("postList", postList);
+		model.addAttribute("pagination", pagination); 
+//		model.addAttribute("boardListView", boardListView);
+		model.addAttribute("pageVo", pageVo);
+		
+		return "tiles.board.postList";
+		
+	}
+	
+
+	@RequestMapping(path = "modifyPost", method = RequestMethod.GET)
+	public String modifyPost(int emp_no, int post_no, Model model) {
+		
+		BoardPostVo vo = new BoardPostVo();
+		vo.setPost_no(post_no);
+		vo.setEmp_no(emp_no);
+		logger.debug("get:{}", "get");
+		
+		BoardPostVo boardPost =  boardService.selectPost(vo);
+		
+		model.addAttribute("boardPost", boardPost);
+	
+		
+		return "tiles.board.modifyPost";
+	}
+	
+	@RequestMapping(path = "modifyPost", method = RequestMethod.POST)
+	public String modifyPost(BoardPostVo boardPostVo,  Model model, MultipartHttpServletRequest multiFile) {
+
+		int updateCnt = boardService.modifyPost(boardPostVo);
+		
+		logger.debug("post:{}", "post");
+		if(updateCnt == 1) {
+//			List<MultipartFile> files = multiFile.getFiles("addFile");
+//			
+//			FileVo vo = new FileVo();
+//			vo.setBor_no(boardno);
+//			vo.setPost_no(postno);
+//			vo.setUser_id(userid);
+//			
+//			for(MultipartFile file:files) {
+//				if(!file.getOriginalFilename().equals("")) {
+//					try {
+//						String fileExtension = FileUtil.getFileExtension(file.getOriginalFilename());
+//						String realFileName = "D:/upload/"+ UUID.randomUUID().toString()+fileExtension;
+//						String fileName = file.getOriginalFilename();
+//						file.transferTo(new File(realFileName));
+//						vo.setFile_nm(fileName);
+//						vo.setRead_file_name(realFileName);
+//						boardService.insertFile(vo);
+//						
+//					} catch (IllegalStateException | IOException e) {
+//						e.printStackTrace();
+//					}
+//				
+//				}
+//			}
+//			
+//			return "redirect:/board/modifyPost?post_no="+post_no;
+//		}else {
+//			//doGet(req, resp);
+//			return "board/boardModify";
+//		}
+	}
+		int post_no = boardPostVo.getPost_no();
+		return "redirect:/board/postDetail?post_no="+post_no;
+	}
+	@RequestMapping(path = "deletePost", method = RequestMethod.POST)
+	public String deletePost(int post_no, int bor_no) {
+		
+		BoardPostVo boardPost = new BoardPostVo();
+		
+		boardPost.setPost_no(post_no);
+		boardPost.setBor_no(bor_no);
+		
+		logger.debug("post:{}",boardPost);
+		int updateCnt = boardService.deletePost(boardPost);
+		
+		if(updateCnt == 1) {
+			return "redirect:/board/postListView?bor_no="+bor_no;
+			
+		}else {
+			return "redirect:/board/postDetail?post_no="+post_no;
+		}
+	}
+		
+
+		@RequestMapping(path="insertComm", method = RequestMethod.POST)
+		public String insertComm(String cont,int emp_no, int post_no) {
+			
+			BoardCommVo vo = new BoardCommVo();
+			
+			vo.setPost_no(post_no);
+			vo.setEmp_no(emp_no);
+			vo.setCont(cont);
+			
+			boardService.insertComm(vo);
+			
+			return "redirect:/board/postDetail?post_no="+post_no;
+		
+		}
+		
+		
+		
+		
+	
+
+}
+		
+
+
+	
+	
+		
+	
+
+

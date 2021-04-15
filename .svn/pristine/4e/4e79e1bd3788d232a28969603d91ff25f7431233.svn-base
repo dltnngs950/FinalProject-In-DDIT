@@ -1,0 +1,75 @@
+package kr.or.ddit.groupware.model;
+
+import java.util.Date;
+
+public class PopUpVo {
+	
+	private int pop_no ;
+	private String title  ;
+	private Date s_time ;
+	private Date e_time ;
+	private String p_route;
+	private int act_cd ;
+	private int post_no;
+	
+	
+	public int getPop_no() {
+		return pop_no;
+	}
+	public void setPop_no(int pop_no) {
+		this.pop_no = pop_no;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public Date getS_time() {
+		return s_time;
+	}
+	public void setS_time(Date s_time) {
+		this.s_time = s_time;
+	}
+	public Date getE_time() {
+		return e_time;
+	}
+	public void setE_time(Date e_time) {
+		this.e_time = e_time;
+	}
+	public String getP_route() {
+		return p_route;
+	}
+	public void setP_route(String p_route) {
+		this.p_route = p_route;
+	}
+	public int getAct_cd() {
+		return act_cd;
+	}
+	public void setAct_cd(int act_cd) {
+		this.act_cd = act_cd;
+	}
+	public int getPost_no() {
+		return post_no;
+	}
+	public void setPost_no(int post_no) {
+		this.post_no = post_no;
+	}
+	@Override
+	public String toString() {
+		return "PopUpVo [pop_no=" + pop_no + ", title=" + title + ", s_time=" + s_time + ", e_time=" + e_time
+				+ ", p_route=" + p_route + ", act_cd=" + act_cd + ", post_no=" + post_no + "]";
+	}
+	public PopUpVo(int pop_no, String title, Date s_time, Date e_time, String p_route, int act_cd, int post_no) {
+		super();
+		this.pop_no = pop_no;
+		this.title = title;
+		this.s_time = s_time;
+		this.e_time = e_time;
+		this.p_route = p_route;
+		this.act_cd = act_cd;
+		this.post_no = post_no;
+	}
+
+	
+}
