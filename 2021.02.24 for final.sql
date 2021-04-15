@@ -3,7 +3,7 @@
 INSERT INTO dept VALUES(0, null, '관리자');
 INSERT INTO dept VALUES(1, null, '마케팅');
 INSERT INTO dept VALUES(2, null, 'IT');
-INSERT INTO dept VALUES(3, null, '영업');
+INSERT INTO dept VALUES(3, null, '영업'); 
 INSERT INTO dept VALUES(4, null, '시스템');
 
 -- brown 정보
