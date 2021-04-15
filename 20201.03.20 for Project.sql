@@ -2,7 +2,7 @@
 SELECT *
 FROM 
 (SELECT ROWNUM rn,a.*
-FROM 
+FROM
 (SELECT s_dt, e_dt, e.ko_nm, c.cd_ko_nm, dept_nm,
         CASE
             WHEN c.comm_no = 201 THEN (v.e_dt - v.s_dt) + 0.5
