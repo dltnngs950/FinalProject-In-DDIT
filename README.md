@@ -9,7 +9,7 @@ Groupware 개발을 목표로 프로젝트를 진행하였다.
 
 (본인 계정으로 로그인 <이수훈> )
 
-<img src="https://user-images.githubusercontent.com/70561355/114825224-e68b2780-9e00-11eb-9eb4-b8bddcb68e55.jpg" width="50%" height="300px"/>
+<img src="https://user-images.githubusercontent.com/70561355/114825224-e68b2780-9e00-11eb-9eb4-b8bddcb68e55.jpg" width="50%" height="800px"/>
 
 2. QR코드 생성됨을 확인.
 
