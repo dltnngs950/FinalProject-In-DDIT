@@ -51,32 +51,26 @@ public class QRController {
 	public String QRLogin(EmpVo empVo, HttpServletRequest req,HttpSession session, Model model, RedirectAttributes ra) {
 		
 		EmpVo dbUser = empService.selectUser(empVo.getEmp_id());
+		
 		if(dbUser == null) {
 			return "redirect:/QR/loginView";
 		}
-		logger.debug("dbUserPass:{}", dbUser.getPass());
-		
+
 		//암호화 pw체크
 		boolean pwdMatch = pwdEncode.matches(empVo.getPass(), dbUser.getPass());
-		logger.debug("pwdMatch:{}", pwdMatch);
 
 		if(dbUser != null && pwdMatch == true) {
 			
 			String originalEmpno = dbUser.getEmp_no()+"";
-			// 파라미터인 사원번호를 양방향 암호화 하기 위한 master Key
 			
+			// 암호화를 위한 변수생성
 			aria = new AriaUtil(QRKey);
 			
 			// 암호화
 			String encryedEmpno = aria.Encrypt(originalEmpno);
 			
-			logger.debug("encryedEmpno : {}", encryedEmpno);
-			
-			// 암호화 된 사원번호 (emp_no) 를 세션 추가후 세션의 제한시간을 15초로 함.
 			session.setAttribute("QR_empno", encryedEmpno);
-			
 			req.getServletContext().setAttribute("QR_USER", dbUser);
-			
 			session.setMaxInactiveInterval(15);
 					
 			return "redirect:/QR/QRdclz";
@@ -102,34 +96,25 @@ public class QRController {
 	@RequestMapping("QRattend")
 	public String doattend(String emp_no, HttpServletRequest req,  Model model) {
 		
-		logger.debug("QRattend Do ============================= () \n");
-
-		logger.debug("emp_no : {}", emp_no);
-
-		EmpVo empinfo = (EmpVo)req.getServletContext().getAttribute("QR_USER");
+		EmpVo empInfo = (EmpVo)req.getServletContext().getAttribute("QR_USER");
 		
-		EmpVo empVo = empService.selectUser(empinfo.getEmp_id());
+		EmpVo empVo = empService.selectUser(empInfo.getEmp_id());
 		// 복호화
 		aria = new AriaUtil(QRKey); // 복호화를 위한 MasterKey
 		String decryptedEmpno = aria.Decrypt(emp_no);
 		
-		logger.debug("decryptedEmpno : {}", decryptedEmpno);
-		logger.debug("empVo.getEmp_no : {}", empVo.getEmp_no());
-		
+		// 복호화 한 사원번호와 empVo에 담겨있는 사원번호가 일치하다면 true 
 		boolean checkQrEmpno = true;
 		
-		// 복호화 한 사원번호와 empVo에 담겨있는 사원번호가 일치하다면 true
 		if(decryptedEmpno.equals(empVo.getEmp_no()+"")) {
 			checkQrEmpno = true;
 		}else{
 			checkQrEmpno = false;
 		}
-				
-		logger.debug("checkQrEmpno : {}", checkQrEmpno);
-		
-		int checkAttend = onoffService.checkAttendCnt(empVo.getEmp_no());
 		
 		// true이고 출근을 하지 않았으면 출근완료, 출근을 했다면 퇴근시간 계속 업데이트
+		int checkAttend = onoffService.checkAttendCnt(empVo.getEmp_no());
+		
 		if(checkQrEmpno == true) {
 			
 			logger.debug("checkAttend : {}", checkAttend);
@@ -163,13 +148,11 @@ public class QRController {
 				if(checkAttend == 0) {
 					
 					model.addAttribute("checkempno", 0);
-					
 					return "QR/QRattendCheck";
 					
 				}else {
 					
 					model.addAttribute("checkempno", 0);
-					
 					return "QR/QRoffworkCheck";
 			}	
 		}	
