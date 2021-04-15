@@ -2,7 +2,7 @@
 SELECT emp_no, ko_nm, dept_nm, cd_ko_nm, hire_dt, retire_dt, work_year, used_vac, total_mon_vac, total_vac, remain_vac, emp_id
 FROM
 (SELECT ROWNUM rn, a.*
-FROM
+FROM 
 (SELECT *
 FROM
 ((SELECT distinct(e.emp_no) emp_no,ko_nm , dept_nm , cd_ko_nm , TO_CHAR(hire_dt, 'yyyy/mm/dd') hire_dt, 
